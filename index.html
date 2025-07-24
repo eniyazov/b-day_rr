@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Rustam!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #007cf0, #00dfd8);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    .container {
+      z-index: 1;
+      padding: 20px;
+      max-width: 800px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 3em;
+      animation: bounce 1s infinite alternate;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin-top: 1em;
+      animation: fadeIn 2s ease-in;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .button {
+      margin-top: 2em;
+      padding: 15px 30px;
+      font-size: 1em;
+      background: white;
+      color: #007cf0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .button:hover {
+      background: #eee;
+      transform: scale(1.05);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .shake {
+      animation: shake 0.6s ease-in-out;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-10px, 0); }
+      40% { transform: translate(10px, 0); }
+      60% { transform: translate(-8px, 0); }
+      80% { transform: translate(8px, 0); }
+      100% { transform: translate(0, 0); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="container">
+    <img src="b6143ce0-eeb0-4daf-889e-36d8f404c8e9.jpg" alt="Team Celebration Photo" />
+    <h1>Happy Birthday, Rustam! 🎉</h1>
+    <p>Wishing you joy, success, and all the happiness in the world!<br>
+    Thank you for being such an inspiring Portfolio Manager at PMD Group.</p>
+    <button class="button" onclick="triggerCelebration()">Click for Surprise!</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createConfettiParticle() {
+      return {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        size: Math.random() * 6 + 4,
+        speedY: Math.random() * 2 + 1,
+        color: `hsl(${Math.random() * 360}, 100%, 50%)`
+      };
+    }
+
+    function updateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.y += p.speedY;
+        if (p.y > canvas.height) {
+          p.y = -10;
+          p.x = Math.random() * canvas.width;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      });
+      requestAnimationFrame(updateConfetti);
+    }
+
+    for (let i = 0; i < 100; i++) {
+      particles.push(createConfettiParticle());
+    }
+    updateConfetti();
+
+    function createFireworks(x, y) {
+      let fireworks = [];
+      for (let i = 0; i < 80; i++) {
+        fireworks.push({
+          x,
+          y,
+          angle: Math.random() * 2 * Math.PI,
+          speed: Math.random() * 5 + 2,
+          size: Math.random() * 3 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          alpha: 1
+        });
+      }
+
+      function animateFireworks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        updateConfetti();
+        fireworks.forEach(f => {
+          f.x += Math.cos(f.angle) * f.speed;
+          f.y += Math.sin(f.angle) * f.speed;
+          f.alpha -= 0.015;
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${hexToRgb(f.color)},${f.alpha})`;
+          ctx.fill();
+        });
+        fireworks = fireworks.filter(f => f.alpha > 0);
+        if (fireworks.length > 0) requestAnimationFrame(animateFireworks);
+      }
+
+      animateFireworks();
+    }
+
+    function hexToRgb(h) {
+      let c = document.createElement("div");
+      c.style.color = h;
+      document.body.appendChild(c);
+      const rgb = getComputedStyle(c).color;
+      document.body.removeChild(c);
+      return rgb.match(/\d+,\s*\d+,\s*\d+/)[0];
+    }
+
+    function triggerCelebration() {
+      document.body.classList.add("shake");
+      setTimeout(() => {
+        document.body.classList.remove("shake");
+      }, 600);
+      const x = Math.random() * canvas.width * 0.6 + canvas.width * 0.2;
+      const y = Math.random() * canvas.height * 0.5 + canvas.height * 0.2;
+      createFireworks(x, y);
+    }
+  </script>
+</body>
+</html>
